@@ -1,0 +1,73 @@
+html,body{
+    display: grid;
+    height: 100%;
+    place-items: center;
+    background: #00943d;
+  }
+
+  /* Texto de bienvenida y de éxito */
+  
+
+  .welcome-text h2, .success-text h2{
+
+    font-size: 25px;
+    color: #fff;
+    font-weight: 400;
+    text-align: center;
+
+  }
+
+  .question h3{
+
+    font-size: 22px;
+    color: #fff;
+    font-weight: 400;
+    text-align: center;
+
+  }
+
+  /* Stars */
+
+  .stars label{
+    font-size: 40px;
+    color: #444;
+    padding: 10px;
+    float: right;
+    transition: all 0.05s ease
+  }
+
+  .star-text{
+    font-size: 25px;
+    color: #fe7;
+    font-weight: 500;
+    margin: 5px 0 20px 0;
+    text-align: center;
+  }
+
+  /* Send button */
+
+  .send-button button{
+    
+    display: inline-block;
+    border: 1px solid #444;
+    outline: none;
+    background: #444;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+
+  .send-button button:hover{
+    background: #1b1b1b;
+     color: #fff;
+  }
+  .error-text{
+    color: #fff;
+  }
+  
+  .success-text{
+display: none;
+  }
