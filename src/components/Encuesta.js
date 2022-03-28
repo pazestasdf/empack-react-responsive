@@ -96,7 +96,13 @@ export default function Encuesta() {
         answer = answer.replaceAll("\"", "")
         var answerDate = new Date();
         answerDate = answerDate.toISOString().slice(0, 10);
-        var comments = commentsRef.current.value;
+        var comments;
+        if (showCommentSection == false){
+            comments = 'Sin comentarios';
+        }
+        else{
+            comments = commentsRef.current.value;
+        }
 
         var data = {
             answer: answer,
