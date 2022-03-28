@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRef } from "react";
-import logo from '../resources/logo.png'
+import logo from '../resources/logo-empack-transp.png'
 import './encuesta.css'
 import { db } from "../firebase";
 
 
 
 export default function Encuesta() {
-
+    const [showCommentSection, setShowCommentSection] = useState(false);
     const starOneRef = useRef();
     const starTwoRef = useRef();
     const starThreeRef = useRef();
@@ -19,7 +19,14 @@ export default function Encuesta() {
     const varibleContentRef = useRef();
     const successTextRef = useRef();
 
+    const commentsRef = useRef();
 
+    const handleLowRatingClick = () => {
+        setShowCommentSection(true);
+    }
+    const handleHighRatingClick = () => {
+        setShowCommentSection(false);
+    }
 
     /* Star One Handlers */
     const handleStarOneHover = () => {
@@ -28,7 +35,7 @@ export default function Encuesta() {
         starThreeRef.current.style.color = "#444";
         starFourRef.current.style.color = "#444";
         starFiveRef.current.style.color = "#444";
-        starTextRef.current.innerText = 'Nada probable'
+        starTextRef.current.innerText = 'Muy mala';
         errorTextRef.current.innerText = '';
     }
 
@@ -39,7 +46,7 @@ export default function Encuesta() {
         starThreeRef.current.style.color = "#444";
         starFourRef.current.style.color = "#444";
         starFiveRef.current.style.color = "#444";
-        starTextRef.current.innerText = 'Poco probable'
+        starTextRef.current.innerText = 'Mala'
         errorTextRef.current.innerText = '';
     }
 
@@ -62,7 +69,7 @@ export default function Encuesta() {
         starThreeRef.current.style.color = "#fd4";
         starFourRef.current.style.color = "#fd4";
         starFiveRef.current.style.color = "#444";
-        starTextRef.current.innerText = 'Probable'
+        starTextRef.current.innerText = 'Buena'
         errorTextRef.current.innerText = '';
     }
 
@@ -74,14 +81,14 @@ export default function Encuesta() {
         starThreeRef.current.style.color = "#fd4";
         starFourRef.current.style.color = "#fd4";
         starFiveRef.current.style.color = "#fd4";
-        starTextRef.current.innerText = 'Muy Probable'
+        starTextRef.current.innerText = 'Muy buena'
         errorTextRef.current.innerText = '';
     }
 
     const handleSendButton = (e) => {
         e.preventDefault();
         if (starTextRef.current.innerText === '') {
-            errorTextRef.current.innerText = '(Debe selecciona una opción antes de enviar su respuesta)'
+            errorTextRef.current.innerText = '(Debe seleccionar una opción antes de enviar su respuesta)'
             return;
         }
 
@@ -89,14 +96,17 @@ export default function Encuesta() {
         answer = answer.replaceAll("\"", "")
         var answerDate = new Date();
         answerDate = answerDate.toISOString().slice(0, 10);
+        var comments = commentsRef.current.value;
 
         var data = {
             answer: answer,
-            answerDate: answerDate
+            answerDate: answerDate,
+            comments: comments
         }
 
         db.collection("empack-encuesta").add(data).then(function (response) {
             console.log("Encuesta enviada exitosamente.")
+            console.log(response)
             varibleContentRef.current.innerHTML = ''
             successTextRef.current.style.display = 'inline'
 
@@ -128,28 +138,40 @@ export default function Encuesta() {
                     </div>
 
                     <div className='question mb-4'>
-                        <h3>¿Cuál sería la probabilidad de volver a comprar en el sitio web de Empack Link?</h3>
+                        <h3>¿Como encontraste la experiencia de compra en nuestro sitio web Empack Link?</h3>
                     </div>
 
                     <div className='stars'>
 
-                        <label htmlFor="rate-5" className="fas fa-star" id="label-5" ref={starFiveRef} onMouseEnter={() => handleStarFiveHover()} ></label>
+                        <label htmlFor="rate-5" className="fas fa-star" id="label-5" ref={starFiveRef} onClick={() => handleHighRatingClick()} onMouseEnter={() => handleStarFiveHover()} ></label>
 
-                        <label htmlFor="rate-4" className="fas fa-star" ref={starFourRef} onMouseEnter={() => handleStarFourHover()}  ></label>
+                        <label htmlFor="rate-4" className="fas fa-star" ref={starFourRef} onClick={() => handleHighRatingClick()} onMouseEnter={() => handleStarFourHover()}  ></label>
 
-                        <label htmlFor="rate-3" className="fas fa-star" ref={starThreeRef} onMouseEnter={() => handleStarThreeHover()} ></label>
+                        <label htmlFor="rate-3" className="fas fa-star" ref={starThreeRef} onClick={() => handleLowRatingClick()}
+                            onMouseEnter={() => handleStarThreeHover()} ></label>
 
-                        <label htmlFor="rate-2" className="fas fa-star" ref={starTwoRef} onMouseEnter={() => handleStarTwoHover()} ></label>
+                        <label htmlFor="rate-2" className="fas fa-star" ref={starTwoRef} onClick={() => handleLowRatingClick()}
+                            onMouseEnter={() => handleStarTwoHover()} ></label>
 
-                        <label htmlFor="rate-1" className="fas fa-star" id="label-1" ref={starOneRef} onMouseEnter={() => handleStarOneHover()}></label>
+                        <label htmlFor="rate-1" className="fas fa-star" id="label-1" ref={starOneRef} onClick={() => handleLowRatingClick()}
+                            onMouseEnter={() => handleStarOneHover()}></label>
 
                     </div>
 
                     <div className="star-text" ref={starTextRef}>
                     </div>
 
-                    <div className="send-button w-100">
-                        <button className="btn w-100" onClick={(e) => handleSendButton(e)}>Enviar respuesta</button>
+                    {showCommentSection ?
+                        <div className='comment-area mb-4 w-100'>
+                        <div className="form-group">
+                            <h3>Tu opinión nos importa</h3>
+                            <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef}></textarea>
+                        </div>
+                    </div>
+                    : null}
+
+                    <div className="send-button w-50">
+                        <button className="btn w-100" onClick={(e) => handleSendButton(e)}>Enviar evaluación</button>
                     </div>
 
                     <div className='error-text mt-4' ref={errorTextRef}>
@@ -159,7 +181,7 @@ export default function Encuesta() {
                 </div>
 
                 <div className='success-text' ref={successTextRef}>
-                    <h2>¡Gracias por tus comentarios!<br /> Tu opinión es importante para nosotros.</h2>
+                    <h2>¡Gracias por tu evaluación!<br /> Tu opinión es importante para nosotros.</h2>
                 </div>
 
 
