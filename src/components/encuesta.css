@@ -10,12 +10,11 @@ html,body{
     border-radius: 10px;
     width: 80%;
   }
-  .logo-img{
-    
-
-  }
   /* Texto de bienvenida y de éxito */
-  
+  .logo-img{
+    margin-bottom: 10px;
+    
+  }
 
   .welcome-text h2, .success-text h2{
 
@@ -29,7 +28,7 @@ html,body{
 
   .question h3, .comment-area h3{
 
-    font-size: 22px;
+    font-size: 25px;
     color: #000;
     font-weight: 400;
     text-align: center;

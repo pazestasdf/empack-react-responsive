@@ -97,7 +97,7 @@ export default function Encuesta() {
         var answerDate = new Date();
         answerDate = answerDate.toISOString().slice(0, 10);
         var comments;
-        if (showCommentSection == false){
+        if (showCommentSection === false){
             comments = 'Sin comentarios';
         }
         else{
@@ -137,11 +137,11 @@ export default function Encuesta() {
 
                 <div className='variable-content d-flex flex-column  justify-content-center align-items-center' ref={varibleContentRef}>
 
-                    <div className='welcome-text mb-4'>
+                    {/* <div className='welcome-text mb-4'>
                         <h2>Porque nos interesa ir mejorando,
                             <br />te invitamos a calificar la experiencia que tuviste con nuestro sitio web ecommerce.</h2>
 
-                    </div>
+                    </div> */}
 
                     <div className='question mb-4'>
                         <h3>¿Como encontraste la experiencia de compra en nuestro sitio web Empack Link?</h3>
