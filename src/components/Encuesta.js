@@ -21,6 +21,8 @@ export default function Encuesta() {
 
     const commentsRef = useRef();
 
+    const recommendRef = useRef();
+
     const handleLowRatingClick = () => {
         setShowCommentSection(true);
     }
@@ -97,17 +99,30 @@ export default function Encuesta() {
         var answerDate = new Date();
         answerDate = answerDate.toISOString().slice(0, 10);
         var comments;
-        if (showCommentSection === false){
+        if (showCommentSection === false) {
             comments = 'Sin comentarios';
         }
-        else{
+        else {
             comments = commentsRef.current.value;
         }
+        if (comments === '') {
+            errorTextRef.current.innerText = '(Debe seleccionar una opción antes de enviar su respuesta)'
+            return;
+        }
 
+        var recommend;
+        recommend = recommendRef.current.value;
+
+        if (recommend === '') {
+            errorTextRef.current.innerText = '(Debe seleccionar una opción de recomendación antes de enviar su respuesta)'
+            return;
+        }
+       
         var data = {
             answer: answer,
             answerDate: answerDate,
-            comments: comments
+            comments: comments,
+            recommend: recommend
         }
 
         db.collection("empack-encuesta").add(data).then(function (response) {
@@ -137,11 +152,6 @@ export default function Encuesta() {
 
                 <div className='variable-content d-flex flex-column  justify-content-center align-items-center' ref={varibleContentRef}>
 
-                    {/* <div className='welcome-text mb-4'>
-                        <h2>Porque nos interesa ir mejorando,
-                            <br />te invitamos a calificar la experiencia que tuviste con nuestro sitio web ecommerce.</h2>
-
-                    </div> */}
 
                     <div className='question mb-4'>
                         <h3>¿Como encontraste la experiencia de compra en nuestro sitio web Empack Link?</h3>
@@ -169,12 +179,32 @@ export default function Encuesta() {
 
                     {showCommentSection ?
                         <div className='comment-area mb-4 w-100'>
-                        <div className="form-group">
-                            <h3>Tu opinión nos importa</h3>
-                            <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef}></textarea>
+                            <div className="form-group">
+                                <h3>Tu opinión nos importa</h3>
+                               
+
+                                <select className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef} multiple>
+                                    <option value="Precio muy alto">Precio muy alto</option>
+                                    <option value="Lentitud del sitio">Lentitud del sitio</option>
+                                    <option value="Información confusa">Información confusa</option>
+                                </select>
+                                {/* <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef}></textarea> */}
+                            </div>
                         </div>
-                    </div>
-                    : null}
+                        : null}
+                    <div className='comment-area mb-4 w-100'>
+                            <div className="form-group">
+                                <h3>¿Cómo te enteraste de nuestra página web?</h3>
+                                <select className="form-control" id="exampleFormControlTextarea2" rows="3" ref={recommendRef} multiple>
+                                    <option value="LinkedIn">LinkedIn</option>
+                                    <option value="Google">Google</option>
+                                    <option value="Recomendacion">Recomendación</option>
+                                    <option value="Página Empack">Página de Empack</option>
+                                    <option value="Mail">Mail</option>
+                                </select>
+                                {/* <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef}></textarea> */}
+                            </div>
+                        </div>
 
                     <div className="send-button w-50">
                         <button className="btn w-100" onClick={(e) => handleSendButton(e)}>Enviar evaluación</button>
