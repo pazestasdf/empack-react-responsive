@@ -90,7 +90,7 @@ export default function Encuesta() {
     const handleSendButton = (e) => {
         e.preventDefault();
         if (starTextRef.current.innerText === '') {
-            errorTextRef.current.innerText = '(Debe seleccionar una opción antes de enviar su respuesta)'
+            errorTextRef.current.innerText = '(Debe + antes de enviar su respuesta)'
             return;
         }
 
@@ -179,11 +179,11 @@ export default function Encuesta() {
 
                     {showCommentSection ?
                         <div className='comment-area mb-4 w-100'>
-                            <div className="form-group">
+                            <div className="form-group custom-select">
                                 <h3>Tu opinión nos importa</h3>
                                
 
-                                <select className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef} multiple>
+                                <select className="form-control" id="exampleFormControlTextarea1" rows="3" size='3'ref={commentsRef} multiple>
                                     <option value="Precio muy alto">Precio muy alto</option>
                                     <option value="Lentitud del sitio">Lentitud del sitio</option>
                                     <option value="Información confusa">Información confusa</option>
@@ -193,9 +193,9 @@ export default function Encuesta() {
                         </div>
                         : null}
                     <div className='comment-area mb-4 w-100'>
-                            <div className="form-group">
+                            <div className="form-group custom-select">
                                 <h3>¿Cómo te enteraste de nuestra página web?</h3>
-                                <select className="form-control" id="exampleFormControlTextarea2" rows="3" ref={recommendRef} multiple>
+                                <select className="form-control" id="custom-select" rows="3" size='5' placeholder="Elige una opción" ref={recommendRef} >
                                     <option value="LinkedIn">LinkedIn</option>
                                     <option value="Google">Google</option>
                                     <option value="Recomendacion">Recomendación</option>

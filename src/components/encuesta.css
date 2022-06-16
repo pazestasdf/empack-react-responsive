@@ -4,7 +4,10 @@ html,body{
     place-items: center;
    
   }
-
+   .custom-select select{
+    overflow-y: auto;
+    
+    } 
   .container{
     background-color: #ffff;
     border-radius: 10px;
