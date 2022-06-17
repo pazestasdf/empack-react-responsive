@@ -19,9 +19,9 @@ export default function Encuesta() {
     const varibleContentRef = useRef();
     const successTextRef = useRef();
 
-    const commentsRef = useRef();
+    // const commentsRef = useRef();
 
-    const recommendRef = useRef();
+    // const recommendRef = useRef();
 
     const handleLowRatingClick = () => {
         setShowCommentSection(true);
@@ -87,10 +87,52 @@ export default function Encuesta() {
         errorTextRef.current.innerText = '';
     }
 
+    const firstCheckBoxGroupValues = [];
+    const secondCheckBoxGroupValues = [];
+
+    const handleChange = (e) => {
+        const checked = e.target.checked;
+        const checkedValue = e.target.value;
+        // Si el checkbox esta checkeado guardamos su valor
+        if (checked === true) {
+            firstCheckBoxGroupValues.push(checkedValue); // push guarda un nuevo valor al final del array
+        }
+        // Si no está checkeado quitamos el valor anteriormente guardado
+        else if (checked === false) {
+            // filter elimina un valor de un arreglo que coincida con la condicion dada
+            firstCheckBoxGroupValues = firstCheckBoxGroupValues.filter(
+                (value) => value === checkedValue
+            );
+        }
+
+        // console.log(firstCheckBoxGroupValues);
+
+       
+    };
+
+    const handleChangeLowRating = (e) => {
+        const checked = e.target.checked;
+        const checkedValue = e.target.value;
+        // Si el checkbox esta checkeado guardamos su valor
+        if (checked === true) {
+            secondCheckBoxGroupValues.push(checkedValue); // push guarda un nuevo valor al final del array
+        }
+        // Si no está checkeado quitamos el valor anteriormente guardado
+        else if (checked === false) {
+            // filter elimina un valor de un arreglo que coincida con la condicion dada
+           secondCheckBoxGroupValues = secondCheckBoxGroupValues.filter(
+                (value) => value === checkedValue
+            );
+        }
+
+        // console.log(secondCheckBoxGroupValues);
+    };
+
+
     const handleSendButton = (e) => {
         e.preventDefault();
         if (starTextRef.current.innerText === '') {
-            errorTextRef.current.innerText = '(Debe + antes de enviar su respuesta)'
+            errorTextRef.current.innerText = '(Debe seleccionar una valoración antes de enviar su respuesta)'
             return;
         }
 
@@ -98,31 +140,44 @@ export default function Encuesta() {
         answer = answer.replaceAll("\"", "")
         var answerDate = new Date();
         answerDate = answerDate.toISOString().slice(0, 10);
-        var comments;
-        if (showCommentSection === false) {
-            comments = 'Sin comentarios';
-        }
-        else {
-            comments = commentsRef.current.value;
-        }
-        if (comments === '') {
+        // var comments;
+        // if (showCommentSection === false) {
+        //     comments = 'Sin comentarios';
+        // }
+        // else {
+        //     comments = commentsRef.current.value;
+        // }
+        // if (comments === '') {
+        //     errorTextRef.current.innerText = '(Debe seleccionar una opción antes de enviar su respuesta)'
+        //     return;
+        // }
+
+        // var recommend;
+        // recommend = recommendRef.current.value;
+
+        // if (recommend === '') {
+        //     errorTextRef.current.innerText = '(Debe seleccionar una opción de recomendación antes de enviar su respuesta)'
+        //     return;
+        // }
+        
+        if (firstCheckBoxGroupValues.length === 0) {
             errorTextRef.current.innerText = '(Debe seleccionar una opción antes de enviar su respuesta)'
             return;
         }
-
-        var recommend;
-        recommend = recommendRef.current.value;
-
-        if (recommend === '') {
-            errorTextRef.current.innerText = '(Debe seleccionar una opción de recomendación antes de enviar su respuesta)'
-            return;
+        if (showCommentSection === true){
+            if (secondCheckBoxGroupValues.length === 0 ) {
+                errorTextRef.current.innerText = '(Debe seleccionar una razón antes de enviar su respuesta)'
+                return;
+            }
         }
-       
+
         var data = {
             answer: answer,
             answerDate: answerDate,
-            comments: comments,
-            recommend: recommend
+            recomendacion: firstCheckBoxGroupValues,
+            lowRatingComment: secondCheckBoxGroupValues
+            // comments: comments,
+            // recommend: recommend
         }
 
         db.collection("empack-encuesta").add(data).then(function (response) {
@@ -154,7 +209,7 @@ export default function Encuesta() {
 
 
                     <div className='question mb-4'>
-                        <h3>¿Como encontraste la experiencia de compra en nuestro sitio web Empack Link?</h3>
+                        <h3>¿Cómo encontraste la experiencia de compra en nuestro sitio web Empack Link?</h3>
                     </div>
 
                     <div className='stars'>
@@ -180,31 +235,51 @@ export default function Encuesta() {
                     {showCommentSection ?
                         <div className='comment-area mb-4 w-100'>
                             <div className="form-group custom-select">
-                                <h3>Tu opinión nos importa</h3>
+                                <h3>¿Por qué?</h3>
+                                <div className='comment-box'>
                                
+                                    <br />
+                                    
+                                    <input type="checkbox" id="cbox1" value="Precio muy alto" onChange={(e) => handleChangeLowRating(e)} /> <label for="cbox1">Precio muy alto</label><br />
+                               
+                                    
+                                    <input type="checkbox" id="cbox2" value="Lentitud del sitio" onChange={(e) => handleChangeLowRating(e)} /> <label for="cbox2">Lentitud del sitio</label><br />
+                            
+                                  
+                                    <input type="checkbox" id="cbox3" value="Información confusa" onChange={(e) => handleChangeLowRating(e)} /> <label for="cbox3">Información confusa</label><br />
+                               
+                                </div>
 
-                                <select className="form-control" id="exampleFormControlTextarea1" rows="3" size='3'ref={commentsRef} multiple>
+                                {/* <select className="form-control" id="exampleFormControlTextarea1" rows="3" size='3'ref={commentsRef} multiple>
                                     <option value="Precio muy alto">Precio muy alto</option>
                                     <option value="Lentitud del sitio">Lentitud del sitio</option>
                                     <option value="Información confusa">Información confusa</option>
-                                </select>
+                                </select> */}
                                 {/* <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef}></textarea> */}
                             </div>
                         </div>
                         : null}
                     <div className='comment-area mb-4 w-100'>
-                            <div className="form-group custom-select">
-                                <h3>¿Cómo te enteraste de nuestra página web?</h3>
-                                <select className="form-control" id="custom-select" rows="3" size='5' placeholder="Elige una opción" ref={recommendRef} >
+                        <div className="form-group custom-select">
+                            <h3>¿Cómo te enteraste de nuestra página web?</h3>
+                            <div className='recommend-box'>
+                                <br />
+                                <input type="checkbox" id="rbox1" value="LinkedIn" onChange={(e) => handleChange(e)} /> <label for="rbox1">LinkedIn</label><br />
+                                <input type="checkbox" id="rbox2" value="Google" onChange={(e) => handleChange(e)} /> <label for="rbox2">Google</label><br />
+                                <input type="checkbox" id="rbox3" value="Recomendacion" onChange={(e) => handleChange(e)} /> <label for="rbox3">Recomendación</label><br />
+                                <input type="checkbox" id="rbox4" value="Pagina Empack" onChange={(e) => handleChange(e)} /> <label for="rbox4">Página de Empack</label><br />
+                                <input type="checkbox" id="rbox5" value="Mail" onChange={(e) => handleChange(e)} /> <label for="rbox5">Mail</label><br />
+                            </div>
+                            {/* <select className="form-control" id="custom-select" rows="3" size='5' placeholder="Elige una opción" ref={recommendRef} >
                                     <option value="LinkedIn">LinkedIn</option>
                                     <option value="Google">Google</option>
                                     <option value="Recomendacion">Recomendación</option>
                                     <option value="Página Empack">Página de Empack</option>
                                     <option value="Mail">Mail</option>
-                                </select>
-                                {/* <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" ref={commentsRef}></textarea> */}
-                            </div>
+                                </select> */}
+
                         </div>
+                    </div>
 
                     <div className="send-button w-50">
                         <button className="btn w-100" onClick={(e) => handleSendButton(e)}>Enviar evaluación</button>

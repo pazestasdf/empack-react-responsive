@@ -83,3 +83,8 @@ html,body{
   .success-text{
     display: none;
   }
+  .comment-box, .recommend-box {
+    
+    text-align: center;
+
+  }
